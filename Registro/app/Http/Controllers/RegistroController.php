@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Alumno;
 use App\Models\Sexo;
 use App\Models\Grado;
+use App\Models\Materia;
 use Carbon\Carbon;
 use App\Http\Requests\RegistroRequest;
 use App\Http\Requests\EditarAlumnoRequest;
+use App\Http\Requests\BusquedaRequest;
+use DB;
 
 class RegistroController extends Controller
 {
@@ -66,8 +69,14 @@ class RegistroController extends Controller
     public function show($id)
     {
         //
-       // $alumno = Alumno::findOrFail($id);
-        //return view('ver-estudiante',compact('estudiante'));
+       $alumno = Alumno::findOrFail($id);
+       $materias = DB::table('materia_grados')
+            ->join('materias', 'materia_grados.materia_id', '=', 'materias.id')
+            ->join('grados','materia_grados.grado_id','=',"grados.id")
+            ->select('materias.nombre')
+            ->where("grados.id","=",$alumno->grado_id)
+            ->get();
+           return view('Registros.mostrar-alumno',compact('alumno','materias'));
     }
 
     /**
@@ -98,7 +107,6 @@ class RegistroController extends Controller
        $alumno = Alumno::FindOrFail($id);
        $alumno->nombre = $request->nombre;
        $alumno->fecha_nacimiento = $request->fecha_nacimiento;
-       $edad = $this->calcular_edad($alumno->fecha_nacimiento);
        $alumno->sexo_id =  $request->sexo_id;
        $alumno->grado_id = $request->grado_id;
        $alumno->observacion = $request->observacion;
@@ -119,7 +127,7 @@ class RegistroController extends Controller
         $aviso = Alumno::findOrFail($id);
         $aviso->delete();
 
-        return redirect()->route('listado_alumnos');
+        return back()->with('message',['success','Alumno eliminado correctamente']);
     }
 
      public function calcular_edad($fecha_nacimiento){
@@ -133,4 +141,5 @@ class RegistroController extends Controller
          */
         return $edad;
     }
+
 }

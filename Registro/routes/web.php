@@ -17,7 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/registros','RegistroController@index')->name('listado_alumnos');
-Route::get('/registros/nuevo','RegistroController@create');
+Route::get('/registros/nuevo','RegistroController@create')->name('nuevo_alumno');
 Route::post('/registros/guardar','RegistroController@store')->name('guardar_alumno');
 Route::get('/registros/editar/{id}','RegistroController@edit')->name('editar_alumno');
 Route::put('/registros/actualizar/{id}','RegistroController@update')->name('actualizar_alumno');
+Route::delete('/registros/eliminar/{id}', 'RegistroController@destroy')->name('eliminar_alumno');
+Route::get('/registros/ver/{id}','RegistroController@show')->name('ver_alumno');

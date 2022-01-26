@@ -5,8 +5,12 @@ Listado de alumnos
 
 @section('content')
 <body>
+    <div class="btn-group">
+        <a href="{{route('nuevo_alumno')}}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i>Nuevo</a>
+    </div>
+
+
   
-</table>
 <table id="tabla" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -29,17 +33,19 @@ Listado de alumnos
                         <div class="btn-group">
                             <a href="{{route('editar_alumno', $alumno->id)}}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i>Editar</a>
 
-                            <a href="" class="btn btn-success btn-sm">
+                            <a href="{{route('ver_alumno',$alumno->id)}}" class="btn btn-success btn-sm">
                         <i class="fas fa-edit">Ver</i>
                         </a>
-                            <a href="#" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash-alt">Eliminar</i>
-                        </a>
+                        <form method="POST"  id="" action="{{route('eliminar_alumno', $alumno->id)}}" >
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onClick="{{$alumno->id}}"> Eliminar</button>
+                        </form>
                         </div>
                     </td>
                 </tr>
                 @endforeach()
             </tbody>
         </table>
+<script src="{{ asset('js/avisos.js') }}"></script>
 </body>
-</html>
